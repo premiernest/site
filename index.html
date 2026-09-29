@@ -1,0 +1,1261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PremierNest — Serviced Apartments in London</title>
+<meta name="description" content="Boutique serviced apartments in London, booked direct — no OTA mark-up, real 24-hour support.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..500;1,8..60,400..500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Layout concept: editorial "booking docket" — asymmetric left-aligned sections,
+     monospace key-tag labels borrowed from hotel key cards & boarding passes,
+     generous negative space instead of a centered hero. Multi-page routing via
+     hash (#home/#overview/#gallery/#availability/#contact), one <main> per page. */
+  :root{
+    --bg:#F1EBE1;
+    --surface:#FFFFFF;
+    --surface-2:#E8E0D2;
+    --ink:#2B2823;
+    --ink-soft:#6C6559;
+    --accent:#D65F2C;
+    --accent-ink:#FBF3EA;
+    --sage:#5F7052;
+    --line:rgba(43,40,35,0.14);
+    --shadow: 0 18px 40px -24px rgba(43,40,35,0.35);
+
+    --font-display:'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+    --font-body:'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-mono:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#211E1A;
+      --surface:#2A2622;
+      --surface-2:#332E28;
+      --ink:#F2EAE0;
+      --ink-soft:#C4BAAC;
+      --accent:#E67F49;
+      --accent-ink:#211E1A;
+      --sage:#8CA178;
+      --line:rgba(242,234,224,0.16);
+      --shadow: 0 18px 40px -24px rgba(0,0,0,0.55);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#211E1A;
+    --surface:#2A2622;
+    --surface-2:#332E28;
+    --ink:#F2EAE0;
+    --ink-soft:#C4BAAC;
+    --accent:#E67F49;
+    --accent-ink:#211E1A;
+    --sage:#8CA178;
+    --line:rgba(242,234,224,0.16);
+    --shadow: 0 18px 40px -24px rgba(0,0,0,0.55);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.55;
+    padding-inline:0;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  .wrap{max-width:1040px;margin-inline:auto;padding-inline:clamp(18px,5vw,40px)}
+
+  h1,h2,h3,.display{
+    font-family:var(--font-display);
+    text-wrap:balance;
+    letter-spacing:-0.01em;
+    font-weight:700;
+    margin:0;
+  }
+  h1{font-size:clamp(2.2rem,5.5vw,3.6rem);line-height:1.04;font-weight:800}
+  h2{font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.15}
+  h3{font-size:1.15rem}
+  p{margin:0}
+  .lede{font-size:1.1rem;color:var(--ink-soft)}
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+  .tag{
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    letter-spacing:0.02em;
+  }
+
+  /* ---------- header ---------- */
+  header.site{
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:40;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid transparent;
+    transition:border-color .25s ease, box-shadow .25s ease;
+  }
+  header.site.scrolled{border-color:var(--line);box-shadow:0 6px 24px -20px rgba(0,0,0,.4)}
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-block:14px;
+    gap:16px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+  .brand img{width:34px;height:34px}
+  .brand span{font-family:var(--font-display);font-weight:800;font-size:1.1rem;letter-spacing:-0.01em}
+  nav.links{display:flex;gap:26px;align-items:center}
+  nav.links a{
+    font-family:var(--font-mono);
+    font-size:0.82rem;
+    letter-spacing:0.04em;
+    text-decoration:none;
+    color:var(--ink-soft);
+    padding-block:4px;
+    border-bottom:1px solid transparent;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  nav.links a:hover{color:var(--ink);border-color:var(--accent)}
+  nav.links a.active{color:var(--ink);border-color:var(--accent)}
+  .nav-cta{
+    font-family:var(--font-mono);
+    font-size:0.8rem;
+    background:var(--accent);
+    color:var(--accent-ink);
+    padding:9px 16px;
+    border-radius:3px;
+    text-decoration:none;
+    white-space:nowrap;
+  }
+  @media (max-width:720px){
+    nav.links{display:none}
+  }
+
+  /* ---------- pages ---------- */
+  .page{display:none}
+  .page.active{display:block}
+  .page-hero{padding-block:clamp(28px,6vw,44px) clamp(8px,2vw,12px)}
+  .page-hero .wrap{display:flex;flex-direction:column;gap:8px}
+
+  /* ---------- photo hero (home) ---------- */
+  .hero-photo{
+    position:relative;
+    min-height:clamp(420px,62vw,620px);
+    display:flex;align-items:flex-end;
+    background-image:url('assets/hero.jpg');
+    background-size:cover;
+    background-position:center 35%;
+    overflow:hidden;
+  }
+  .hero-photo::before{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(25,22,18,0.55) 0%, rgba(25,22,18,0.35) 40%, rgba(25,22,18,0.82) 100%);
+  }
+  .hero-photo-inner{
+    position:relative;z-index:1;
+    padding-block:clamp(28px,7vw,56px);
+    display:flex;flex-direction:column;gap:14px;
+  }
+  .hero-photo h1{color:#FBF3EA}
+  .search-widget{
+    margin-top:12px;
+    background:var(--surface);
+    border-radius:8px;
+    box-shadow:var(--shadow);
+    padding:14px;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr auto;
+    gap:10px;
+    max-width:760px;
+  }
+  @media (max-width:680px){.search-widget{grid-template-columns:1fr 1fr}}
+  .sw-field{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .sw-field label{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-soft)}
+  .sw-field input, .sw-field select{
+    font-family:var(--font-body);font-size:0.92rem;
+    border:1px solid var(--line);border-radius:4px;
+    padding:8px 10px;background:var(--bg);color:var(--ink);
+    min-width:0;
+  }
+  .sw-submit{
+    grid-column:span 1;
+    justify-content:center;
+    border:none;cursor:pointer;font-family:var(--font-mono);
+  }
+  @media (max-width:680px){.sw-submit{grid-column:1 / -1}}
+
+  /* ---------- intro strip + teaser card (home) ---------- */
+  .intro-strip{padding-block:clamp(36px,6vw,56px)}
+  .intro-strip h2{max-width:760px}
+  .teaser-card{
+    margin-top:26px;
+    display:inline-flex;flex-direction:column;
+    background:var(--surface);border:1px solid var(--line);border-radius:8px;
+    overflow:hidden;box-shadow:var(--shadow);
+    max-width:280px;text-decoration:none;color:var(--ink);
+    transition:transform .15s ease;
+  }
+  .teaser-card:hover{transform:translateY(-2px)}
+  .teaser-card img{height:170px;object-fit:cover;width:100%}
+  .teaser-body{padding:14px 16px 18px;display:flex;flex-direction:column;gap:4px}
+  .teaser-body .tt{font-family:var(--font-display);font-weight:700;font-size:0.98rem}
+  .teaser-body .tl{font-family:var(--font-mono);font-size:0.75rem;color:var(--ink-soft)}
+  .teaser-body .tr{font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);margin-top:6px}
+
+  /* ---------- compliance badges ---------- */
+  .badges{display:flex;gap:14px;flex-wrap:wrap;margin-top:4px}
+  .badge{
+    display:flex;align-items:center;gap:8px;
+    border:1px solid var(--line);border-radius:6px;
+    padding:10px 14px;background:var(--surface);
+    font-family:var(--font-mono);font-size:0.76rem;color:var(--ink-soft);
+  }
+  .badge b{color:var(--ink);font-family:var(--font-display)}
+
+  .btn{
+    font-family:var(--font-mono);
+    font-size:0.85rem;
+    letter-spacing:0.02em;
+    padding:12px 20px;
+    border-radius:3px;
+    text-decoration:none;
+    display:inline-flex;align-items:center;gap:8px;
+    border:1px solid var(--line);
+    transition:transform .15s ease, background .15s ease;
+    cursor:pointer;
+  }
+  .btn-primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+  .btn-primary:hover{transform:translateY(-1px)}
+  .btn-ghost{background:transparent;color:var(--ink)}
+  .btn-ghost:hover{background:var(--surface-2)}
+
+  /* ---------- trust strip (home) ---------- */
+  .trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .trust-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:0;
+  }
+  @media (max-width:720px){.trust-grid{grid-template-columns:1fr}}
+  .trust-item{
+    padding:22px 8px;
+    display:flex;flex-direction:column;gap:4px;
+    border-right:1px solid var(--line);
+  }
+  .trust-item:last-child{border-right:none}
+  @media (max-width:720px){.trust-item{border-right:none;border-bottom:1px solid var(--line);padding-block:18px}
+    .trust-item:last-child{border-bottom:none}}
+  .trust-item .n{font-family:var(--font-mono);color:var(--accent);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase}
+  .trust-item .t{font-family:var(--font-display);font-weight:700;font-size:1.02rem}
+
+  /* ---------- generic section ---------- */
+  section{padding-block:clamp(40px,7vw,72px)}
+  .section-head{display:flex;flex-direction:column;gap:10px;margin-bottom:clamp(28px,5vw,44px);max-width:640px}
+
+  /* ---------- overview page (about + neighbourhood) ---------- */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,56px);align-items:start}
+  @media (max-width:780px){.about-grid{grid-template-columns:1fr}}
+  .about-copy{display:flex;flex-direction:column;gap:16px}
+  .keyfacts{
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:22px 24px;display:flex;flex-direction:column;gap:14px;
+  }
+  .keyfacts .row{display:flex;justify-content:space-between;gap:12px;font-size:0.92rem;border-bottom:1px dashed var(--line);padding-bottom:12px}
+  .keyfacts .row:last-child{border-bottom:none;padding-bottom:0}
+  .keyfacts .row .k{font-family:var(--font-mono);color:var(--ink-soft);font-size:0.78rem;letter-spacing:0.04em;text-transform:uppercase}
+  .keyfacts .row .v{font-family:var(--font-display);font-weight:700;text-align:right}
+
+  .neigh-col{display:flex;flex-direction:column;gap:14px;max-width:640px}
+  .neigh-list{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+  .neigh-list .li{display:flex;gap:10px;font-size:0.95rem}
+  .neigh-list .li .dot{font-family:var(--font-mono);color:var(--accent);flex:none}
+
+  .amenity-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,4vw,36px);margin-top:24px;
+  }
+  @media (max-width:900px){.amenity-grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:520px){.amenity-grid{grid-template-columns:1fr}}
+  .amenity-group h4{
+    font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:10px;
+  }
+  .amenity-group ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .amenity-group li{font-size:0.9rem;color:var(--ink)}
+  .amenity-note{
+    margin-top:26px;padding-top:18px;border-top:1px dashed var(--line);
+    font-family:var(--font-mono);font-size:0.8rem;color:var(--ink-soft);
+    display:flex;flex-wrap:wrap;gap:6px 18px;
+  }
+
+  .transport-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,4vw,36px);margin-top:28px;
+  }
+  @media (max-width:780px){.transport-grid{grid-template-columns:1fr}}
+  .dist-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+  .dist-list li{
+    display:flex;justify-content:space-between;gap:10px;
+    padding-block:9px;border-bottom:1px solid var(--line);font-size:0.9rem;
+  }
+  .dist-list li:last-child{border-bottom:none}
+  .dist-list li b{font-family:var(--font-mono);font-weight:600;color:var(--ink-soft);white-space:nowrap}
+
+  /* ---------- gallery page ---------- */
+  .stay-card{
+    display:grid;grid-template-columns:0.9fr 1.1fr;
+    gap:0;
+    background:var(--surface);border:1px solid var(--line);border-radius:8px;
+    overflow:hidden;box-shadow:var(--shadow);
+  }
+  @media (max-width:780px){.stay-card{grid-template-columns:1fr}}
+  .stay-art{
+    background:var(--surface-2);
+    min-width:0;
+    border-right:1px solid var(--line);
+  }
+  @media (max-width:780px){.stay-art{border-right:none;border-bottom:1px solid var(--line)}}
+  .stay-body{padding:clamp(22px,4vw,32px);display:flex;flex-direction:column;gap:14px;min-width:0}
+  .stay-badge{
+    align-self:flex-start;
+    font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;
+    background:var(--sage);color:#fff;padding:4px 9px;border-radius:2px;
+  }
+  .stay-facts{display:flex;flex-wrap:wrap;gap:10px 20px;margin-block:2px}
+  .stay-facts div{font-family:var(--font-mono);font-size:0.78rem;color:var(--ink-soft)}
+  .stay-facts div b{color:var(--ink);font-weight:500}
+  .stay-address{font-family:var(--font-mono);font-size:0.82rem;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:12px}
+
+  .thumb-row{display:flex;gap:10px;margin-top:14px}
+  .thumb-row img{width:96px;height:72px;object-fit:cover;border-radius:5px;border:1px solid var(--line)}
+
+  .photo-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px;
+  }
+  .photo-grid figure{margin:0;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:var(--surface-2);aspect-ratio:4/3;cursor:zoom-in}
+  .photo-grid img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}
+  .photo-grid figure:hover img{transform:scale(1.04)}
+  @media (max-width:900px){.photo-grid{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:600px){.photo-grid{grid-template-columns:repeat(2,1fr);gap:8px}}
+
+  /* ---------- lightbox ---------- */
+  #lightbox{
+    display:none;position:fixed;inset:0;z-index:200;
+    background:#ffffff;
+    align-items:center;justify-content:center;padding:clamp(16px,5vw,48px);
+  }
+  #lightbox.open{display:flex}
+  #lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,0.18)}
+  .lb-close{
+    all:unset;position:absolute;top:18px;right:22px;color:var(--ink);font-size:1.4rem;
+    cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+    border-radius:50%;transition:background .15s ease;
+  }
+  .lb-close:hover{background:var(--surface-2)}
+  .lb-nav{
+    all:unset;position:absolute;top:50%;transform:translateY(-50%);color:var(--ink);font-size:1.6rem;
+    cursor:pointer;width:48px;height:48px;display:flex;align-items:center;justify-content:center;
+    border-radius:50%;transition:background .15s ease;
+  }
+  .lb-nav:hover{background:var(--surface-2)}
+  .lb-prev{left:14px}
+  .lb-next{right:14px}
+  @media (max-width:600px){.lb-nav{width:40px;height:40px;font-size:1.3rem}}
+
+  /* ---------- availability page ---------- */
+  .b24-link{
+    font-family:var(--font-mono);
+    font-size:0.85rem;
+    letter-spacing:0.02em;
+    padding:12px 22px;
+    border-radius:3px;
+    background:var(--accent);
+    color:var(--accent-ink);
+    cursor:pointer;
+    display:inline-block;
+    text-align:center;
+    text-decoration:none;
+    transition:transform .15s ease;
+  }
+  .b24-link:hover{transform:translateY(-1px)}
+  .b24bookingbutton{display:flex;gap:10px;flex-wrap:wrap}
+  .wa-btn{
+    font-family:var(--font-mono);font-size:0.85rem;letter-spacing:0.02em;
+    padding:12px 22px;border-radius:3px;
+    background:#25D366;color:#fff;text-decoration:none;
+    display:inline-flex;align-items:center;gap:6px;
+    transition:transform .15s ease;
+  }
+  .wa-btn:hover{transform:translateY(-1px)}
+  .book-note{
+    display:flex;align-items:flex-start;gap:10px;
+    background:var(--surface-2);border-radius:6px;padding:14px 16px;
+    font-size:0.9rem;color:var(--ink-soft);
+    margin-top:22px;
+  }
+
+  .cal-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);
+    padding:clamp(20px,4vw,30px);margin-bottom:18px;
+  }
+  .cal-card-head{
+    display:flex;flex-direction:column;gap:4px;
+    padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line);
+  }
+  .cal-card-head .name{font-family:var(--font-display);font-weight:700;font-size:1.2rem}
+  .cal-card-head .addr{font-family:var(--font-mono);font-size:0.8rem;color:var(--ink-soft)}
+  .cal-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .cal-month{font-family:var(--font-display);font-weight:700;font-size:1.1rem}
+  .cal-nav{display:flex;gap:6px}
+  .cal-nav button{
+    all:unset;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+    border:1px solid var(--line);border-radius:6px;font-family:var(--font-mono);color:var(--ink);
+    transition:background .15s ease;
+  }
+  .cal-nav button:hover{background:var(--surface-2)}
+  .cal-nav button:disabled{opacity:0.3;cursor:default;pointer-events:none}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .cal-dow{font-family:var(--font-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-soft);text-align:center;padding-block:6px}
+  .cal-day{
+    all:unset;box-sizing:border-box;text-align:center;padding:11px 0;font-family:var(--font-mono);font-size:0.88rem;
+    border-radius:6px;cursor:pointer;color:var(--ink);transition:background .12s ease;
+  }
+  .cal-day:hover:not(.is-disabled):not(.is-empty){background:var(--surface-2)}
+  .cal-day.is-empty{cursor:default}
+  .cal-day.is-disabled{color:var(--ink-soft);opacity:0.3;cursor:not-allowed;text-decoration:line-through}
+  .cal-day.is-today{box-shadow:inset 0 0 0 1px var(--accent)}
+  .cal-day.is-selected{background:var(--accent);color:var(--accent-ink);font-weight:700}
+  .cal-day.is-in-range{background:var(--surface-2)}
+  .cal-summary{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+    margin-top:20px;padding-top:20px;border-top:1px dashed var(--line);
+  }
+  .cal-summary-text{display:flex;flex-direction:column;gap:4px}
+  .cal-dates{font-family:var(--font-mono);font-size:0.85rem;color:var(--ink-soft)}
+  .cal-dates b{color:var(--ink);font-weight:600}
+  .cal-clear{all:unset;cursor:pointer;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);text-decoration:underline}
+
+  .faq-list{display:flex;flex-direction:column;border-top:1px solid var(--line);margin-top:12px}
+  details{border-bottom:1px solid var(--line)}
+  summary{
+    cursor:pointer;list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+    padding-block:18px;
+    font-family:var(--font-display);font-weight:700;font-size:1.02rem;
+  }
+  summary::-webkit-details-marker{display:none}
+  summary .plus{font-family:var(--font-mono);color:var(--accent);font-size:1.1rem;flex:none;transition:transform .2s ease}
+  details[open] summary .plus{transform:rotate(45deg)}
+  details p{padding-bottom:20px;max-width:640px;color:var(--ink-soft)}
+
+  /* ---------- contact page ---------- */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,48px)}
+  @media (max-width:780px){.contact-grid{grid-template-columns:1fr}}
+  .contact-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:8px;
+    padding:clamp(20px,4vw,28px);display:flex;flex-direction:column;gap:14px;
+  }
+  .contact-row{display:flex;flex-direction:column;gap:2px;border-bottom:1px dashed var(--line);padding-bottom:12px}
+  .contact-row:last-child{border-bottom:none;padding-bottom:0}
+  .contact-row .k{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft)}
+  .contact-row .v{font-family:var(--font-display);font-weight:700;font-size:1.05rem}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);padding-block:clamp(36px,6vw,56px)}
+  .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:clamp(24px,5vw,40px)}
+  @media (max-width:780px){.foot-grid{grid-template-columns:1fr;gap:28px}}
+  .foot-col{display:flex;flex-direction:column;gap:10px}
+  .foot-col h4{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 4px}
+  .foot-col a, .foot-col span{font-size:0.92rem;text-decoration:none}
+  .foot-legal{
+    margin-top:32px;padding-top:20px;border-top:1px dashed var(--line);
+    font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-soft);
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  }
+  .foot-admin{font-family:var(--font-mono);font-size:0.72rem;color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:0.001ms !important;transition-duration:0.001ms !important}
+  }
+
+  /* ---------- multi-unit gallery + availability ---------- */
+  .units-list{display:flex;flex-direction:column;gap:20px}
+  .unit-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .unit-tab{
+    all:unset;cursor:pointer;font-family:var(--font-mono);font-size:0.82rem;
+    padding:9px 16px;border-radius:20px;border:1px solid var(--line);color:var(--ink-soft);
+  }
+  .unit-tab.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+</style>
+<script>document.documentElement.setAttribute('data-theme','light');</script>
+</head>
+<body>
+
+<header class="site" id="siteHeader">
+  <div class="wrap nav">
+    <a class="brand" href="#home">
+      <img src="assets/logo.png" alt="PremierNest logo" style="width:56px;height:56px">
+    </a>
+    <nav class="links" id="navLinks">
+      <a href="#home" data-page="home">Home</a>
+      <a href="#overview" data-page="overview">Overview</a>
+      <a href="#gallery" data-page="gallery">Gallery</a>
+      <a href="#availability" data-page="availability">Availability</a>
+      <a href="#contact" data-page="contact">Contact</a>
+    </nav>
+    <a class="nav-cta" href="#availability">Book Now</a>
+  </div>
+</header>
+
+<!-- ============ HOME ============ -->
+<main class="page" id="page-home">
+
+  <section class="hero-photo" id="heroPhoto">
+    <div class="wrap hero-photo-inner">
+      <span class="eyebrow" style="color:#F6D9C4">Boutique serviced apartment · London</span>
+      <h1 data-bind="heroTitle">Serviced Apartments In London</h1>
+      <p class="lede" style="color:rgba(251,243,234,0.88);max-width:520px" data-bind="heroSub">Flexible rates, a real London location, and a stay that's actually looked after.</p>
+      <form class="search-widget" id="searchWidget">
+        <div class="sw-field">
+          <label for="swCheckin">Check-in</label>
+          <input type="date" id="swCheckin" name="checkin" required>
+        </div>
+        <div class="sw-field">
+          <label for="swCheckout">Check-out</label>
+          <input type="date" id="swCheckout" name="checkout" required>
+        </div>
+        <div class="sw-field">
+          <label for="swGuests">Guests</label>
+          <select id="swGuests" name="guests">
+            <option>1 adult</option>
+            <option>2 adults</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary sw-submit">Search</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="intro-strip">
+    <div class="wrap">
+      <h2 data-bind="introHeadline">Flexible rates, a great location, and a bed you'll actually sleep well in.</h2>
+      <a class="teaser-card" href="#gallery" id="teaserCard">
+        <img id="teaserImg" src="assets/gallery/living-room.jpg" alt="Apartment living room">
+        <div class="teaser-body">
+          <span class="tt" id="teaserName">New Guest favourite 1-Bed Flat</span>
+          <span class="tl" id="teaserLoc">London · Sleeps 3</span>
+          <span class="tr">Live rates at checkout →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <div class="trust">
+    <div class="wrap trust-grid">
+      <div class="trust-item">
+        <span class="n">01 · Peace of mind</span>
+        <span class="t">Fully insured &amp; operated to UK safety standards</span>
+      </div>
+      <div class="trust-item">
+        <span class="n">02 · We Price Match</span>
+        <span class="t">Book direct for the same rate you'd pay on Airbnb or Booking.com</span>
+      </div>
+      <div class="trust-item">
+        <span class="n">03 · Real support</span>
+        <span class="t">A phone number that's answered, day or night</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ============ OVERVIEW ============ -->
+<main class="page" id="page-overview">
+  <div class="page-hero"><div class="wrap"><span class="eyebrow">Overview</span><h1 style="font-size:clamp(1.6rem,4vw,2.2rem);font-family:var(--font-display);font-weight:800">Overview of the 1-Bed Flat</h1></div></div>
+
+  <section id="about">
+    <div class="wrap about-grid">
+      <div class="about-copy">
+        <h2>Personally managed. Properly run.</h2>
+        <p data-bind="about1">We bring a level of care and attention to detail that larger operators simply can't match. Every property is personally managed to hotel-quality standards, and every guest has direct access to responsive, 24-hour support.</p>
+        <p data-bind="about2">We handle everything in-house, from meticulous property presentation to seamless digital check-in, so guests can expect a smooth, well-communicated stay from booking to check-out. Our focus is on being a genuine home away from home: comfortable, reliable, and consistently well cared for.</p>
+        <div class="badges">
+          <span class="badge"><b>ICO</b> Registered</span>
+          <span class="badge"><b>PRS</b> Property Redress Scheme member</span>
+        </div>
+      </div>
+      <div class="keyfacts">
+        <div class="row"><span class="k">Operating since</span><span class="v">2024</span></div>
+        <div class="row"><span class="k">Location</span><span class="v">London</span></div>
+        <div class="row"><span class="k">Check-in</span><span class="v">15:00</span></div>
+        <div class="row"><span class="k">Check-out</span><span class="v">10:00</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="amenities">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Amenities</span>
+        <h2>What's in the apartment.</h2>
+      </div>
+      <div class="amenity-grid">
+        <div class="amenity-group">
+          <h4>Kitchen</h4>
+          <ul>
+            <li>Fridge, freezer &amp; electric stove</li>
+            <li>Oven, microwave &amp; blender</li>
+            <li>Coffee maker &amp; cooking essentials</li>
+            <li>Dining table</li>
+          </ul>
+        </div>
+        <div class="amenity-group">
+          <h4>Bedroom &amp; bathroom</h4>
+          <ul>
+            <li>Bed, linen &amp; clothing storage</li>
+            <li>Modern private bathroom</li>
+            <li>Hairdryer &amp; toiletries</li>
+            <li>Anti-fog Bluetooth mirror with LED lighting</li>
+          </ul>
+        </div>
+        <div class="amenity-group">
+          <h4>Living &amp; work</h4>
+          <ul>
+            <li>Sofa, coffee table &amp; TV</li>
+            <li>Dedicated workspace</li>
+            <li>Wi-Fi throughout</li>
+            <li>Air conditioning &amp; heating</li>
+          </ul>
+        </div>
+        <div class="amenity-group">
+          <h4>Laundry &amp; safety</h4>
+          <ul>
+            <li>Washer, tumble dryer &amp; iron</li>
+            <li>Smoke &amp; CO alarms</li>
+            <li>Fire extinguisher</li>
+            <li>Secure key access</li>
+          </ul>
+        </div>
+      </div>
+      <div class="amenity-note">
+        <span>No smoking</span>
+        <span>No parties or events</span>
+        <span>Pets on request (charges may apply)</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="neighbourhood" style="background:var(--surface-2)">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Getting your bearings</span>
+        <h2>What's on the doorstep.</h2>
+      </div>
+      <div class="neigh-col">
+        <h3>London</h3>
+        <p class="lede">A creative, village-like corner of South London, well connected to Kennington, Vauxhall and central London.</p>
+        <div class="neigh-list">
+          <div class="li"><span class="dot">—</span><span>Vauxhall Pleasure Gardens and the Imperial War Museum, both under 2 miles away</span></div>
+          <div class="li"><span class="dot">—</span><span>Myatts Fields Park for green space, five minutes away</span></div>
+          <div class="li"><span class="dot">—</span><span>A local high street of independent restaurants and pubs, minutes on foot</span></div>
+          <div class="li"><span class="dot">—</span><span>Oval and Kennington underground stations both under a mile away</span></div>
+        </div>
+      </div>
+
+      <div class="transport-grid">
+        <div class="amenity-group">
+          <h4>Top attractions</h4>
+          <ul class="dist-list">
+            <li><span>Tower Bridge</span><b>2.2 mi</b></li>
+            <li><span>London Bridge</span><b>2.3 mi</b></li>
+            <li><span>Big Ben</span><b>2.3 mi</b></li>
+            <li><span>Tower of London</span><b>2.7 mi</b></li>
+            <li><span>Trafalgar Square</span><b>2.9 mi</b></li>
+          </ul>
+        </div>
+        <div class="amenity-group">
+          <h4>Public transport</h4>
+          <ul class="dist-list">
+            <li><span>Oval (Underground)</span><b>0.8 mi</b></li>
+            <li><span>Kennington (Underground)</span><b>1.1 mi</b></li>
+            <li><span>Denmark Hill (rail)</span><b>1.1 mi</b></li>
+            <li><span>Elephant &amp; Castle (rail)</span><b>1.2 mi</b></li>
+            <li><span>Victoria Coach Station</span><b>2.8 mi</b></li>
+          </ul>
+        </div>
+        <div class="amenity-group">
+          <h4>Closest airports</h4>
+          <ul class="dist-list">
+            <li><span>London City</span><b>8 mi</b></li>
+            <li><span>Heathrow</span><b>16 mi</b></li>
+            <li><span>Gatwick</span><b>27 mi</b></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ GALLERY ============ -->
+<main class="page" id="page-gallery">
+  <div class="page-hero"><div class="wrap"><span class="eyebrow">Gallery</span></div></div>
+
+  <section id="stays">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">The apartment</span>
+        <h2>Looked after personally, not by a call centre.</h2>
+      </div>
+
+      <div class="units-list" id="unitsList"><!-- one .stay-card per unit, rendered by JS from state.units --></div>
+
+      <div class="section-head" style="margin-top:40px">
+        <span class="eyebrow">Photo tour</span>
+        <h2>A closer look.</h2>
+      </div>
+      <div class="photo-grid">
+        <figure><img src="assets/gallery/kitchen.jpg" alt="Kitchen"></figure>
+        <figure><img src="assets/gallery/hallway2.jpg" alt="Hallway into living room"></figure>
+        <figure><img src="assets/gallery/bathroom-sink.jpg" alt="Bathroom vanity"></figure>
+        <figure><img src="assets/gallery/shower.jpg" alt="Shower room"></figure>
+        <figure><img src="assets/gallery/hallway1.jpg" alt="Upstairs hallway"></figure>
+        <figure><img src="assets/gallery/staircase.jpg" alt="Staircase"></figure>
+        <figure><img src="assets/gallery/patio.jpg" alt="Private garden patio"></figure>
+        <figure><img src="assets/hero.jpg" alt="Apartment exterior view"></figure>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ AVAILABILITY ============ -->
+<main class="page" id="page-availability">
+  <div class="page-hero"><div class="wrap"><span class="eyebrow">Availability</span></div></div>
+
+  <section id="book">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Reserve your apartment stay.</h2>
+        <p class="lede">Booking runs through our live availability system — you'll see real dates and pricing, and digitally sign our guest agreement as part of check-in.</p>
+      </div>
+
+      <div class="unit-tabs" id="unitTabs"><!-- unit switcher buttons, rendered by JS when there's more than one unit --></div>
+
+      <div class="cal-card">
+        <div class="cal-card-head">
+          <span class="name" id="calUnitName">New Guest favourite 1-Bed Flat</span>
+          <span class="addr" id="calUnitAddr">Bethwin Road, London SE5 0SJ</span>
+        </div>
+        <div class="cal-top">
+          <div class="cal-nav"><button type="button" id="calPrev" aria-label="Previous month">←</button></div>
+          <span class="cal-month" id="calMonthLabel">Month Year</span>
+          <div class="cal-nav"><button type="button" id="calNext" aria-label="Next month">→</button></div>
+        </div>
+        <div class="cal-grid" id="calGrid"><!-- day-of-week + day cells rendered by JS --></div>
+        <div class="cal-summary">
+          <div class="cal-summary-text">
+            <span class="cal-dates" id="calDatesLabel">Select a check-in date, then a check-out date.</span>
+            <button type="button" class="cal-clear" id="calClear">Clear dates</button>
+          </div>
+          <div class="b24bookingbutton">
+            <a class="b24-link" id="b24LinkBtn" href="https://beds24.com/booking.php?propid=356866&amp;type=0&amp;referer=PremierNestSite" target="_blank" rel="noopener">Check availability →</a>
+            <input type="hidden" id="b24Propid" value="356866">
+            <input type="hidden" id="b24Checkin" value="">
+            <input type="hidden" id="b24Checkout" value="">
+            <a class="wa-btn" id="waBookBtn" href="#" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.29-.15-1.7-.84-1.96-.93-.26-.1-.46-.15-.65.15-.2.29-.75.93-.92 1.12-.17.2-.34.22-.63.07-.29-.15-1.22-.45-2.32-1.43-.86-.76-1.44-1.7-1.6-2-.17-.29-.02-.45.13-.6.13-.13.29-.34.44-.51.15-.17.2-.29.29-.49.1-.2.05-.37-.02-.51-.07-.15-.65-1.58-.9-2.16-.24-.57-.48-.5-.65-.5-.17-.01-.36-.01-.56-.01s-.51.07-.78.37c-.26.29-1.02 1-1.02 2.42 0 1.43 1.04 2.82 1.19 3.01.15.2 2.05 3.13 4.96 4.39.69.3 1.23.48 1.65.61.69.22 1.32.19 1.82.11.55-.08 1.7-.7 1.94-1.37.24-.68.24-1.26.17-1.38-.07-.12-.26-.19-.55-.34z"/><path d="M12.02 2C6.5 2 2.03 6.48 2.03 12c0 1.83.49 3.55 1.35 5.03L2 22l5.11-1.34A9.94 9.94 0 0 0 12.02 22C17.55 22 22 17.52 22 12S17.55 2 12.02 2Zm0 18.17c-1.64 0-3.17-.46-4.47-1.26l-.32-.19-3.03.8.81-2.95-.21-.31A8.15 8.15 0 0 1 3.84 12c0-4.5 3.67-8.17 8.18-8.17S20.2 7.5 20.2 12s-3.67 8.17-8.18 8.17Z"/></svg>
+              WhatsApp us
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="book-note">
+        <span>Prefer to talk it through first? Call <strong data-bind="phone">+44 3330 508 780</strong> (24 hours) or WhatsApp <strong data-bind="whatsapp">+44 7832 647103</strong> — same rates as booking online, no OTA mark-up.</span>
+      </div>
+
+      <div class="section-head" style="margin-top:48px">
+        <span class="eyebrow">Before you book</span>
+        <h2>Good to know.</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>How can I contact PremierNest?<span class="plus">+</span></summary>
+          <p>Whether you're looking to stay for business or leisure, or just have a question about the flat, our team is on hand: call <strong data-bind="phone">+44 3330 508 780</strong> (24 hours), WhatsApp <strong data-bind="whatsapp">+44 7832 647103</strong>, or email <strong data-bind="email">admin@premiernest.org</strong>.</p>
+        </details>
+        <details>
+          <summary>What time is check-in and check-out?<span class="plus">+</span></summary>
+          <p>Check-in is from 3:00pm and check-out is by 10:00am. Early check-in or late check-out can often be arranged — just ask before your stay, or via the check-in guide sent closer to arrival.</p>
+        </details>
+        <details>
+          <summary>Why book direct instead of through Airbnb or Booking.com?<span class="plus">+</span></summary>
+          <p>Booking direct means no platform mark-up, the most flexible cancellation terms we offer, and direct contact with us if your plans change — the same apartment, the fairer rate.</p>
+        </details>
+        <details>
+          <summary>Do I need to sign anything before I stay?<span class="plus">+</span></summary>
+          <p>Yes — every guest completes a short digital guest agreement (house rules and terms &amp; conditions) as part of online check-in, along with everything you need to know for arrival: door codes, wifi, and local tips.</p>
+        </details>
+        <details>
+          <summary>Is a security deposit required?<span class="plus">+</span></summary>
+          <p>No deposit is taken at booking. Guests remain liable for any damage caused during their stay, as set out in the guest agreement.</p>
+        </details>
+        <details>
+          <summary>Is the apartment insured and compliant?<span class="plus">+</span></summary>
+          <p>Yes. The apartment is covered by full insurance and operated in line with current UK short-let safety and regulatory requirements.</p>
+        </details>
+        <details>
+          <summary>Can I view the apartment before booking?<span class="plus">+</span></summary>
+          <p>You're welcome to visit the flat in person before booking so you can see it meets what you need — just email us to arrange a time. For monthly or longer stays we can also schedule a live video walkthrough if an in-person viewing isn't practical.</p>
+        </details>
+        <details>
+          <summary>What is a serviced apartment?<span class="plus">+</span></summary>
+          <p>A serviced apartment is fully furnished accommodation available for temporary rent, suited to short stays, medium stays or long-term stays, with hotel-like extras laid on during your stay such as cleaning, maintenance and responsive support. Apartments are normally self-contained, with a fully fitted kitchen and a private bathroom, plus separate living and sleeping areas depending on the size and configuration.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ CONTACT ============ -->
+<main class="page" id="page-contact">
+  <div class="page-hero"><div class="wrap"><span class="eyebrow">Contact</span></div></div>
+
+  <section id="contactSection">
+    <div class="wrap contact-grid">
+      <div class="contact-card">
+        <h2 style="font-size:1.3rem">Talk to us directly</h2>
+        <div class="contact-row">
+          <span class="k">24 hour phone</span>
+          <span class="v" data-bind="phonePlain">+44 3330 508 780</span>
+        </div>
+        <div class="contact-row">
+          <span class="k">WhatsApp</span>
+          <span class="v" data-bind="whatsapp">+44 7832 647103</span>
+        </div>
+        <div class="contact-row">
+          <span class="k">Email</span>
+          <span class="v" data-bind="email">admin@premiernest.org</span>
+        </div>
+      </div>
+      <div class="contact-card">
+        <h2 style="font-size:1.3rem">Prefer to just book?</h2>
+        <p class="lede">Check live dates and pricing, and pay securely — no phone call needed.</p>
+        <a class="btn btn-primary" href="#availability" style="align-self:flex-start">Check availability →</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <a class="brand" href="#home" style="margin-bottom:6px">
+          <img src="assets/logo.png" alt="PremierNest logo" style="width:30px;height:30px">
+          <span>PremierNest</span>
+        </a>
+        <p class="lede" style="font-size:0.9rem">A boutique serviced apartment in London, booked direct.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <span class="tag" data-bind="phoneLabel">24hr: +44 3330 508 780</span>
+        <span class="tag" data-bind="whatsappLabel">WhatsApp: +44 7832 647103</span>
+        <span class="tag" data-bind="email">admin@premiernest.org</span>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="#overview">Overview</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#availability">Availability</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+    <div class="foot-legal">
+      <span>© <span id="year"></span> Premiernest Property Services Ltd · Company No. 17416675</span>
+    </div>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" aria-hidden="true">
+  <button type="button" class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  <button type="button" class="lb-nav lb-prev" id="lbPrev" aria-label="Previous photo">←</button>
+  <img id="lbImg" src="" alt="">
+  <button type="button" class="lb-nav lb-next" id="lbNext" aria-label="Next photo">→</button>
+</div>
+
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+(function(){
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  var PAGES = ['home','overview','gallery','availability','contact'];
+
+  // ---------- default content (fallback if content/site.json can't be loaded) ----------
+  var defaultContent = {
+    heroTitle: "Serviced Apartments In London",
+    heroSub: "Flexible rates, a real London location, and a stay that's actually looked after.",
+    introHeadline: "Flexible rates, a great location, and a bed you'll actually sleep well in.",
+    about1: "We bring a level of care and attention to detail that larger operators simply can't match. Every property is personally managed to hotel-quality standards, and every guest has direct access to responsive, 24-hour support.",
+    about2: "We handle everything in-house, from meticulous property presentation to seamless digital check-in, so guests can expect a smooth, well-communicated stay from booking to check-out. Our focus is on being a genuine home away from home: comfortable, reliable, and consistently well cared for.",
+    phone: "+44 3330 508 780",
+    whatsapp: "+44 7495 900059",
+    email: "admin@premiernest.org",
+    units: [
+      {
+        name: "New Guest favourite 1-Bed Flat",
+        desc: "Settle into a modern South London flat with a private, fully fenced garden — an inviting spot to unwind after a day in the city. A bright main living/sleeping area pairs with a separate kitchen and modern bathroom, presented to a high standard for stays short or long.",
+        sleeps: "3",
+        bedrooms: "1",
+        outdoor: "Private garden",
+        address: "Bethwin Road · London SE5 0SJ",
+        beds24propid: "356866",
+        photo: "assets/gallery/living-room.jpg"
+      }
+    ]
+  };
+
+  var PLACEHOLDER_PHOTO = "assets/gallery/living-room.jpg";
+  var state = JSON.parse(JSON.stringify(defaultContent));
+  var selectedUnitIndex = 0;
+
+  function renderContent(s){
+    document.querySelectorAll('[data-bind]').forEach(function(el){
+      var key = el.getAttribute('data-bind');
+      if(key === 'phoneLabel'){ el.textContent = '24hr: ' + s.phone; return; }
+      if(key === 'whatsappLabel'){ el.textContent = 'WhatsApp: ' + s.whatsapp; return; }
+      if(key === 'phonePlain'){ el.textContent = s.phone; return; }
+      if(key in s){ el.textContent = s[key]; }
+    });
+    var waBtn = document.getElementById('waBookBtn');
+    if(waBtn){
+      var digits = String(s.whatsapp || '').replace(/[^\d]/g, '');
+      var msg = "Hi, I'm interested in booking the flat — could you help me with dates and rates?";
+      waBtn.href = 'https://wa.me/' + digits + '?text=' + encodeURIComponent(msg);
+    }
+    renderUnits(s.units || []);
+  }
+
+  // ---------- units: gallery list, home teaser, availability tabs ----------
+  function renderUnits(units){
+    if(!units.length) units = defaultContent.units;
+    if(selectedUnitIndex >= units.length) selectedUnitIndex = 0;
+
+    // home teaser (first unit)
+    var first = units[0];
+    var teaserImg = document.getElementById('teaserImg');
+    var teaserName = document.getElementById('teaserName');
+    var teaserLoc = document.getElementById('teaserLoc');
+    if(teaserImg) teaserImg.src = first.photo || PLACEHOLDER_PHOTO;
+    if(teaserImg) teaserImg.alt = first.name;
+    if(teaserName) teaserName.textContent = units.length > 1 ? (units.length + ' apartments in London') : first.name;
+    if(teaserLoc) teaserLoc.textContent = 'London · Sleeps ' + first.sleeps;
+
+    // gallery: one stay-card per unit
+    var list = document.getElementById('unitsList');
+    if(list){
+      list.innerHTML = units.map(function(u, i){
+        return '' +
+          '<article class="stay-card">' +
+            '<div class="stay-art"><img src="' + (u.photo || PLACEHOLDER_PHOTO) + '" alt="' + escapeHtml(u.name) + '" style="width:100%;height:100%;object-fit:cover"></div>' +
+            '<div class="stay-body">' +
+              '<span class="stay-badge">Available now</span>' +
+              '<h3>' + escapeHtml(u.name) + '</h3>' +
+              '<p>' + escapeHtml(u.desc) + '</p>' +
+              '<div class="stay-facts">' +
+                '<div>Sleeps <b>' + escapeHtml(u.sleeps) + '</b></div>' +
+                '<div>Bedrooms <b>' + escapeHtml(u.bedrooms) + '</b></div>' +
+                '<div>Outdoor space <b>' + escapeHtml(u.outdoor) + '</b></div>' +
+              '</div>' +
+              '<div class="stay-address tag">' + escapeHtml(u.address) + '</div>' +
+              '<a class="btn btn-primary" href="#availability" data-goto-unit="' + i + '" style="align-self:flex-start;margin-top:4px">Check availability →</a>' +
+            '</div>' +
+          '</article>';
+      }).join('');
+      list.querySelectorAll('[data-goto-unit]').forEach(function(a){
+        a.addEventListener('click', function(){ selectedUnitIndex = parseInt(a.getAttribute('data-goto-unit'), 10); renderAvailabilityUnit(); });
+      });
+    }
+
+    // availability tabs (only shown with more than one unit)
+    var tabs = document.getElementById('unitTabs');
+    if(tabs){
+      tabs.innerHTML = units.length > 1 ? units.map(function(u, i){
+        return '<button type="button" class="unit-tab' + (i === selectedUnitIndex ? ' active' : '') + '" data-unit-tab="' + i + '">' + escapeHtml(u.name) + '</button>';
+      }).join('') : '';
+      tabs.querySelectorAll('[data-unit-tab]').forEach(function(btn){
+        btn.addEventListener('click', function(){ selectedUnitIndex = parseInt(btn.getAttribute('data-unit-tab'), 10); renderAvailabilityUnit(); });
+      });
+    }
+
+    renderAvailabilityUnit();
+  }
+
+  function currentUnit(){
+    var units = (state.units && state.units.length) ? state.units : defaultContent.units;
+    return units[selectedUnitIndex] || units[0];
+  }
+
+  function renderAvailabilityUnit(){
+    var u = currentUnit();
+    if(!u) return;
+    var nameEl = document.getElementById('calUnitName');
+    var addrEl = document.getElementById('calUnitAddr');
+    var propidEl = document.getElementById('b24Propid');
+    if(nameEl) nameEl.textContent = u.name;
+    if(addrEl) addrEl.textContent = u.address;
+    if(propidEl) propidEl.value = u.beds24propid;
+    document.querySelectorAll('#unitTabs .unit-tab').forEach(function(btn){
+      btn.classList.toggle('active', parseInt(btn.getAttribute('data-unit-tab'), 10) === selectedUnitIndex);
+    });
+    updateB24Href();
+  }
+
+  // Keeps the real "Check availability" link's href in sync with the
+  // selected unit and dates. A plain <a target="_blank"> is used (rather
+  // than a form submit or a window.open() click handler) since that's the
+  // reliable way to open a new tab across browsers.
+  function updateB24Href(){
+    var btn = document.getElementById('b24LinkBtn');
+    var propidEl = document.getElementById('b24Propid');
+    var checkinEl = document.getElementById('b24Checkin');
+    var checkoutEl = document.getElementById('b24Checkout');
+    if(!btn || !propidEl) return;
+    var params = new URLSearchParams();
+    params.set('propid', propidEl.value);
+    params.set('type', '0');
+    params.set('referer', 'PremierNestSite');
+    if(checkinEl && checkinEl.value) params.set('checkin', checkinEl.value);
+    if(checkoutEl && checkoutEl.value) params.set('checkout', checkoutEl.value);
+    btn.href = 'https://beds24.com/booking.php?' + params.toString();
+  }
+
+  function escapeHtml(str){
+    return String(str == null ? '' : str).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  renderContent(state);
+
+  // ---------- load live content ----------
+  // Content is edited through the CMS at /admin/, which writes to
+  // content/site.json in the repo. Netlify rebuilds and redeploys the site
+  // automatically whenever that file changes, so this fetch always picks up
+  // the latest published content on page load.
+  fetch('content/site.json', {cache: 'no-store'})
+    .then(function(res){ return res.ok ? res.json() : null; })
+    .then(function(data){
+      if(data){
+        state = Object.assign({}, defaultContent, data);
+        renderContent(state);
+      }
+    })
+    .catch(function(){ /* fall back to defaultContent, already rendered above */ });
+
+  // ---------- availability calendar ----------
+  (function(){
+    var grid = document.getElementById('calGrid');
+    var monthLabel = document.getElementById('calMonthLabel');
+    var datesLabel = document.getElementById('calDatesLabel');
+    var prevBtn = document.getElementById('calPrev');
+    var nextBtn = document.getElementById('calNext');
+    var clearBtn = document.getElementById('calClear');
+    var checkinField = document.getElementById('b24Checkin');
+    var checkoutField = document.getElementById('b24Checkout');
+    if(!grid) return;
+
+    var DOW = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var today = new Date(); today.setHours(0,0,0,0);
+    var viewYear = today.getFullYear();
+    var viewMonth = today.getMonth();
+    var checkin = null;  // Date
+    var checkout = null; // Date
+
+    function fmt(d){
+      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    }
+    function pretty(d){
+      return d.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'});
+    }
+    function sameDay(a,b){ return a && b && a.getTime() === b.getTime(); }
+
+    function render(){
+      monthLabel.textContent = MONTHS[viewMonth] + ' ' + viewYear;
+      var firstOfMonth = new Date(viewYear, viewMonth, 1);
+      var startOffset = (firstOfMonth.getDay() + 6) % 7; // Monday = 0
+      var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+      var html = DOW.map(function(d){ return '<span class="cal-dow">' + d + '</span>'; }).join('');
+
+      for(var i = 0; i < startOffset; i++){
+        html += '<button type="button" class="cal-day is-empty" disabled></button>';
+      }
+      for(var day = 1; day <= daysInMonth; day++){
+        var d = new Date(viewYear, viewMonth, day);
+        var classes = ['cal-day'];
+        if(d < today) classes.push('is-disabled');
+        if(sameDay(d, today)) classes.push('is-today');
+        if(sameDay(d, checkin) || sameDay(d, checkout)) classes.push('is-selected');
+        else if(checkin && checkout && d > checkin && d < checkout) classes.push('is-in-range');
+        html += '<button type="button" class="' + classes.join(' ') + '" data-date="' + fmt(d) + '"' + (d < today ? ' disabled' : '') + '>' + day + '</button>';
+      }
+      grid.innerHTML = html;
+
+      var firstNavigable = new Date(today.getFullYear(), today.getMonth(), 1);
+      prevBtn.disabled = (viewYear === firstNavigable.getFullYear() && viewMonth === firstNavigable.getMonth());
+
+      grid.querySelectorAll('.cal-day[data-date]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var d = new Date(btn.getAttribute('data-date') + 'T00:00:00');
+          if(!checkin || (checkin && checkout)){
+            checkin = d; checkout = null;
+          } else if(d <= checkin){
+            checkin = d; checkout = null;
+          } else {
+            checkout = d;
+          }
+          render();
+          updateSummary();
+        });
+      });
+    }
+
+    function updateSummary(){
+      if(checkin && checkout){
+        datesLabel.innerHTML = '<b>' + pretty(checkin) + '</b> → <b>' + pretty(checkout) + '</b>';
+        checkinField.value = fmt(checkin);
+        checkoutField.value = fmt(checkout);
+      } else if(checkin){
+        datesLabel.innerHTML = '<b>' + pretty(checkin) + '</b> → choose a check-out date';
+        checkinField.value = fmt(checkin);
+        checkoutField.value = '';
+      } else {
+        datesLabel.textContent = 'Select a check-in date, then a check-out date.';
+        checkinField.value = '';
+        checkoutField.value = '';
+      }
+      updateB24Href();
+    }
+
+    prevBtn.addEventListener('click', function(){
+      viewMonth--; if(viewMonth < 0){ viewMonth = 11; viewYear--; }
+      render();
+    });
+    nextBtn.addEventListener('click', function(){
+      viewMonth++; if(viewMonth > 11){ viewMonth = 0; viewYear++; }
+      render();
+    });
+    clearBtn.addEventListener('click', function(){
+      checkin = null; checkout = null;
+      render();
+      updateSummary();
+    });
+
+    render();
+    updateSummary();
+  })();
+
+  // ---------- page routing ----------
+  function showPage(id){
+    PAGES.forEach(function(p){
+      var el = document.getElementById('page-' + p);
+      if(el) el.classList.toggle('active', p === id);
+    });
+    document.querySelectorAll('#navLinks a').forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('data-page') === id);
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function routeFromHash(){
+    var hash = location.hash.slice(1);
+    var id = PAGES.indexOf(hash) !== -1 ? hash : 'home';
+    showPage(id);
+  }
+  window.addEventListener('hashchange', routeFromHash);
+  routeFromHash();
+
+  // ---------- hero search widget ----------
+  var searchWidget = document.getElementById('searchWidget');
+  if(searchWidget){
+    searchWidget.addEventListener('submit', function(e){
+      e.preventDefault();
+      location.hash = '#availability';
+    });
+  }
+
+  // ---------- header scroll shadow ----------
+  var header = document.getElementById('siteHeader');
+  var onScroll = function(){
+    if(window.scrollY > 8){ header.classList.add('scrolled'); }
+    else { header.classList.remove('scrolled'); }
+  };
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // ---------- photo lightbox ----------
+  (function(){
+    var photos = Array.prototype.slice.call(document.querySelectorAll('.photo-grid img'));
+    if(!photos.length) return;
+    var lb = document.getElementById('lightbox');
+    var lbImg = document.getElementById('lbImg');
+    var closeBtn = document.getElementById('lbClose');
+    var prevBtn = document.getElementById('lbPrev');
+    var nextBtn = document.getElementById('lbNext');
+    var idx = 0;
+
+    function show(i){
+      idx = (i + photos.length) % photos.length;
+      lbImg.src = photos[idx].src;
+      lbImg.alt = photos[idx].alt || '';
+    }
+    function open(i){
+      show(i);
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden', 'false');
+    }
+    function close(){
+      lb.classList.remove('open');
+      lb.setAttribute('aria-hidden', 'true');
+      lbImg.src = '';
+    }
+
+    photos.forEach(function(img, i){
+      img.closest('figure').addEventListener('click', function(){ open(i); });
+    });
+    closeBtn.addEventListener('click', close);
+    prevBtn.addEventListener('click', function(){ show(idx - 1); });
+    nextBtn.addEventListener('click', function(){ show(idx + 1); });
+    lb.addEventListener('click', function(e){ if(e.target === lb) close(); });
+    document.addEventListener('keydown', function(e){
+      if(!lb.classList.contains('open')) return;
+      if(e.key === 'Escape') close();
+      else if(e.key === 'ArrowLeft') show(idx - 1);
+      else if(e.key === 'ArrowRight') show(idx + 1);
+    });
+  })();
+
+  // ---------- Netlify Identity: bounce invite/recovery links to /admin/ ----------
+  if(window.netlifyIdentity){
+    window.netlifyIdentity.on('init', function(user){
+      if(!user){
+        window.netlifyIdentity.on('login', function(){
+          document.location.href = '/admin/';
+        });
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>

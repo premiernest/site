@@ -1,0 +1,39 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/uploads"
+public_folder: "assets/uploads"
+
+site_url: https://premiernest.org
+display_url: https://premiernest.org
+
+collections:
+  - name: "site"
+    label: "Site Content"
+    files:
+      - file: "content/site.json"
+        label: "PremierNest Site"
+        name: "site"
+        fields:
+          - { label: "Hero headline", name: "heroTitle", widget: "string" }
+          - { label: "Hero subheading", name: "heroSub", widget: "text" }
+          - { label: "Intro tagline (above the apartment teaser)", name: "introHeadline", widget: "text" }
+          - { label: "About — paragraph 1", name: "about1", widget: "text" }
+          - { label: "About — paragraph 2", name: "about2", widget: "text" }
+          - { label: "Phone", name: "phone", widget: "string" }
+          - { label: "WhatsApp number", name: "whatsapp", widget: "string", hint: "Include country code, e.g. +44 7495 900059" }
+          - { label: "Email", name: "email", widget: "string" }
+          - label: "Units"
+            name: "units"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Description", name: "desc", widget: "text" }
+              - { label: "Sleeps", name: "sleeps", widget: "string" }
+              - { label: "Bedrooms", name: "bedrooms", widget: "string" }
+              - { label: "Outdoor space", name: "outdoor", widget: "string" }
+              - { label: "Address", name: "address", widget: "string" }
+              - { label: "Beds24 property ID", name: "beds24propid", widget: "string", hint: "Found in your Beds24 property settings" }
+              - { label: "Photo", name: "photo", widget: "image", required: false, hint: "Upload a real photo of this unit" }

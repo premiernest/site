@@ -1,0 +1,22 @@
+{
+  "heroTitle": "Serviced Apartments In London",
+  "heroSub": "Flexible rates, a real London location, and a stay that's actually looked after.",
+  "introHeadline": "Flexible rates, a great location, and a bed you'll actually sleep well in.",
+  "about1": "We bring a level of care and attention to detail that larger operators simply can't match. Every property is personally managed to hotel-quality standards, and every guest has direct access to responsive, 24-hour support.",
+  "about2": "We handle everything in-house, from meticulous property presentation to seamless digital check-in, so guests can expect a smooth, well-communicated stay from booking to check-out. Our focus is on being a genuine home away from home: comfortable, reliable, and consistently well cared for.",
+  "phone": "+44 3330 508 780",
+  "whatsapp": "+44 7495 900059",
+  "email": "admin@premiernest.org",
+  "units": [
+    {
+      "name": "New Guest favourite 1-Bed Flat",
+      "desc": "Settle into a modern South London flat with a private, fully fenced garden — an inviting spot to unwind after a day in the city. A bright main living/sleeping area pairs with a separate kitchen and modern bathroom, presented to a high standard for stays short or long.",
+      "sleeps": "3",
+      "bedrooms": "1",
+      "outdoor": "Private garden",
+      "address": "Bethwin Road · London SE5 0SJ",
+      "beds24propid": "356866",
+      "photo": "assets/gallery/living-room.jpg"
+    }
+  ]
+}
