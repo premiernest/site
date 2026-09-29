@@ -820,7 +820,7 @@
       </div>
 
       <div class="book-note">
-        <span>Prefer to talk it through first? Call <strong data-bind="phone">+44 3330 508 780</strong> (24 hours) or WhatsApp <a class="wa-inline-link" data-bind="whatsapp" href="#" target="_blank" rel="noopener">+44 7832 647103</a> — same rates as booking online, no OTA mark-up.</span>
+        <span>Prefer to talk it through first? Call <a class="wa-inline-link" data-bind="phone" href="tel:">+44 3330 508 780</a> (24 hours) or <a class="wa-inline-link" data-bind="whatsapp" href="#" target="_blank" rel="noopener">WhatsApp us</a> — same rates as booking online, no OTA mark-up.</span>
       </div>
 
       <div class="section-head" style="margin-top:48px">
@@ -830,7 +830,7 @@
       <div class="faq-list">
         <details>
           <summary>How can I contact PremierNest?<span class="plus">+</span></summary>
-          <p>Whether you're looking to stay for business or leisure, or just have a question about the flat, our team is on hand: call <strong data-bind="phone">+44 3330 508 780</strong> (24 hours), WhatsApp <a class="wa-inline-link" data-bind="whatsapp" href="#" target="_blank" rel="noopener">+44 7832 647103</a>, or email <a class="wa-inline-link" data-bind="email" href="mailto:admin@premiernest.org">admin@premiernest.org</a>.</p>
+          <p>Whether you're looking to stay for business or leisure, or just have a question about the flat, our team is on hand: call <a class="wa-inline-link" data-bind="phone" href="tel:">+44 3330 508 780</a> (24 hours), <a class="wa-inline-link" data-bind="whatsapp" href="#" target="_blank" rel="noopener">WhatsApp us</a>, or email <a class="wa-inline-link" data-bind="email" href="mailto:admin@premiernest.org">admin@premiernest.org</a>.</p>
         </details>
         <details>
           <summary>What time is check-in and check-out?<span class="plus">+</span></summary>
@@ -875,11 +875,11 @@
         <h2 style="font-size:1.3rem">Talk to us directly</h2>
         <div class="contact-row">
           <span class="k">24 hour phone</span>
-          <span class="v" data-bind="phonePlain">+44 3330 508 780</span>
+          <a class="v wa-inline-link" data-bind="phonePlain" href="tel:">+44 3330 508 780</a>
         </div>
         <div class="contact-row">
           <span class="k">WhatsApp</span>
-          <a class="v wa-inline-link" data-bind="whatsapp" href="#" target="_blank" rel="noopener">+44 7832 647103</a>
+          <a class="v wa-inline-link" data-bind="whatsapp" href="#" target="_blank" rel="noopener">Tap to chat</a>
         </div>
         <div class="contact-row">
           <span class="k">Email</span>
@@ -907,8 +907,8 @@
       </div>
       <div class="foot-col">
         <h4>Contact</h4>
-        <span class="tag" data-bind="phoneLabel">24hr: +44 3330 508 780</span>
-        <a class="tag wa-inline-link" data-bind="whatsappLabel" href="#" target="_blank" rel="noopener">WhatsApp: +44 7832 647103</a>
+        <a class="tag wa-inline-link" data-bind="phoneLabel" href="tel:">24hr: +44 3330 508 780</a>
+        <a class="tag wa-inline-link" data-bind="whatsappLabel" href="#" target="_blank" rel="noopener">WhatsApp us</a>
         <a class="tag wa-inline-link" data-bind="email" href="mailto:admin@premiernest.org">admin@premiernest.org</a>
       </div>
       <div class="foot-col">
@@ -971,13 +971,19 @@
   function renderContent(s){
     document.querySelectorAll('[data-bind]').forEach(function(el){
       var key = el.getAttribute('data-bind');
+      // WhatsApp mentions show friendly text ("WhatsApp us", "Tap to chat"),
+      // never the raw number — only the href (set below) needs updating.
+      if(key === 'whatsapp' || key === 'whatsappLabel'){ return; }
       if(key === 'phoneLabel'){ el.textContent = '24hr: ' + s.phone; return; }
-      if(key === 'whatsappLabel'){ el.textContent = 'WhatsApp: ' + s.whatsapp; return; }
       if(key === 'phonePlain'){ el.textContent = s.phone; return; }
       if(key in s){ el.textContent = s[key]; }
     });
-    // Make every WhatsApp/email mention a live link (wa.me / mailto), kept
-    // in sync with whatever number/address is set via the CMS.
+    // Make every phone/WhatsApp/email mention a live link (tel: / wa.me /
+    // mailto), kept in sync with whatever number/address is set via the CMS.
+    var phoneHref = 'tel:' + String(s.phone || '').replace(/[^\d+]/g, '');
+    document.querySelectorAll('a[data-bind="phone"], a[data-bind="phonePlain"], a[data-bind="phoneLabel"]').forEach(function(a){
+      a.href = phoneHref;
+    });
     var waDigits = String(s.whatsapp || '').replace(/[^\d]/g, '');
     var waMsg = "Hi, I'm interested in booking the flat — could you help me with dates and rates?";
     var waHref = 'https://wa.me/' + waDigits + '?text=' + encodeURIComponent(waMsg);
