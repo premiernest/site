@@ -140,8 +140,34 @@
     text-decoration:none;
     white-space:nowrap;
   }
+  .nav-toggle{
+    display:none;
+    all:unset;cursor:pointer;
+    width:38px;height:38px;
+    align-items:center;justify-content:center;
+    border:1px solid var(--line);border-radius:6px;
+  }
+  .nav-toggle svg{width:18px;height:18px;stroke:var(--ink)}
+  .nav-mobile{
+    display:none;
+    flex-direction:column;
+    padding-top:6px;
+    border-top:1px solid var(--line);
+  }
+  .nav-mobile.open{display:flex}
+  .nav-mobile a{
+    font-family:var(--font-mono);font-size:0.9rem;color:var(--ink-soft);
+    text-decoration:none;padding:12px 4px;border-bottom:1px solid var(--line);
+  }
+  .nav-mobile a.active{color:var(--ink)}
+  .nav-mobile a:last-child{border-bottom:none}
+  .nav-mobile .nav-cta{
+    margin-top:10px;text-align:center;padding:12px;
+  }
   @media (max-width:720px){
     nav.links{display:none}
+    .nav-cta{display:none}
+    .nav-toggle{display:flex}
   }
 
   /* ---------- pages ---------- */
@@ -519,6 +545,19 @@
       <a href="#contact" data-page="contact">Contact</a>
     </nav>
     <a class="nav-cta" href="#availability">Book Now</a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+  <div class="wrap">
+    <nav class="nav-mobile" id="navMobile">
+      <a href="#home" data-page="home">Home</a>
+      <a href="#overview" data-page="overview">Overview</a>
+      <a href="#gallery" data-page="gallery">Gallery</a>
+      <a href="#availability" data-page="availability">Availability</a>
+      <a href="#contact" data-page="contact">Contact</a>
+      <a class="nav-cta" href="#availability">Book Now</a>
+    </nav>
   </div>
 </header>
 
@@ -1167,7 +1206,7 @@
       var el = document.getElementById('page-' + p);
       if(el) el.classList.toggle('active', p === id);
     });
-    document.querySelectorAll('#navLinks a').forEach(function(a){
+    document.querySelectorAll('#navLinks a, #navMobile a[data-page]').forEach(function(a){
       a.classList.toggle('active', a.getAttribute('data-page') === id);
     });
     window.scrollTo(0, 0);
@@ -1187,6 +1226,22 @@
     searchWidget.addEventListener('submit', function(e){
       e.preventDefault();
       location.hash = '#availability';
+    });
+  }
+
+  // ---------- mobile menu toggle ----------
+  var navToggle = document.getElementById('navToggle');
+  var navMobile = document.getElementById('navMobile');
+  if(navToggle && navMobile){
+    navToggle.addEventListener('click', function(){
+      var open = navMobile.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    navMobile.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){
+        navMobile.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
     });
   }
 
