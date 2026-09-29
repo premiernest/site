@@ -483,7 +483,8 @@
   /* Beds24 hosted booking engine, embedded via iframe (full search →
      rates → guest details → payment flow, matching Beds24's own page). */
   .b24-iframe-wrap{width:100%}
-  .b24-iframe-wrap iframe{width:100%;border:none;display:block}
+  .b24-iframe-wrap iframe{width:100%;border:none;display:block;height:1200px}
+  @media (max-width:700px){.b24-iframe-wrap iframe{height:1600px}}
   .wa-row{display:flex;justify-content:flex-end;width:100%;margin-top:16px}
   .cal-dates{font-family:var(--font-mono);font-size:0.85rem;color:var(--ink-soft)}
   .cal-dates b{color:var(--ink);font-weight:600}
