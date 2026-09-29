@@ -429,6 +429,12 @@
     font-size:0.9rem;color:var(--ink-soft);
     margin-top:22px;
   }
+  .wa-inline-link{
+    color:inherit;font-weight:700;text-decoration:none;
+    border-bottom:1px solid var(--line);
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .wa-inline-link:hover{color:var(--accent);border-color:var(--accent)}
 
   .cal-card{
     background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);
@@ -814,7 +820,7 @@
       </div>
 
       <div class="book-note">
-        <span>Prefer to talk it through first? Call <strong data-bind="phone">+44 3330 508 780</strong> (24 hours) or WhatsApp <strong data-bind="whatsapp">+44 7832 647103</strong> — same rates as booking online, no OTA mark-up.</span>
+        <span>Prefer to talk it through first? Call <strong data-bind="phone">+44 3330 508 780</strong> (24 hours) or WhatsApp <a class="wa-inline-link" data-bind="whatsapp" href="#" target="_blank" rel="noopener">+44 7832 647103</a> — same rates as booking online, no OTA mark-up.</span>
       </div>
 
       <div class="section-head" style="margin-top:48px">
@@ -824,7 +830,7 @@
       <div class="faq-list">
         <details>
           <summary>How can I contact PremierNest?<span class="plus">+</span></summary>
-          <p>Whether you're looking to stay for business or leisure, or just have a question about the flat, our team is on hand: call <strong data-bind="phone">+44 3330 508 780</strong> (24 hours), WhatsApp <strong data-bind="whatsapp">+44 7832 647103</strong>, or email <strong data-bind="email">admin@premiernest.org</strong>.</p>
+          <p>Whether you're looking to stay for business or leisure, or just have a question about the flat, our team is on hand: call <strong data-bind="phone">+44 3330 508 780</strong> (24 hours), WhatsApp <a class="wa-inline-link" data-bind="whatsapp" href="#" target="_blank" rel="noopener">+44 7832 647103</a>, or email <a class="wa-inline-link" data-bind="email" href="mailto:admin@premiernest.org">admin@premiernest.org</a>.</p>
         </details>
         <details>
           <summary>What time is check-in and check-out?<span class="plus">+</span></summary>
@@ -873,11 +879,11 @@
         </div>
         <div class="contact-row">
           <span class="k">WhatsApp</span>
-          <span class="v" data-bind="whatsapp">+44 7832 647103</span>
+          <a class="v wa-inline-link" data-bind="whatsapp" href="#" target="_blank" rel="noopener">+44 7832 647103</a>
         </div>
         <div class="contact-row">
           <span class="k">Email</span>
-          <span class="v" data-bind="email">admin@premiernest.org</span>
+          <a class="v wa-inline-link" data-bind="email" href="mailto:admin@premiernest.org">admin@premiernest.org</a>
         </div>
       </div>
       <div class="contact-card">
@@ -902,8 +908,8 @@
       <div class="foot-col">
         <h4>Contact</h4>
         <span class="tag" data-bind="phoneLabel">24hr: +44 3330 508 780</span>
-        <span class="tag" data-bind="whatsappLabel">WhatsApp: +44 7832 647103</span>
-        <span class="tag" data-bind="email">admin@premiernest.org</span>
+        <a class="tag wa-inline-link" data-bind="whatsappLabel" href="#" target="_blank" rel="noopener">WhatsApp: +44 7832 647103</a>
+        <a class="tag wa-inline-link" data-bind="email" href="mailto:admin@premiernest.org">admin@premiernest.org</a>
       </div>
       <div class="foot-col">
         <h4>Explore</h4>
@@ -970,12 +976,19 @@
       if(key === 'phonePlain'){ el.textContent = s.phone; return; }
       if(key in s){ el.textContent = s[key]; }
     });
+    // Make every WhatsApp/email mention a live link (wa.me / mailto), kept
+    // in sync with whatever number/address is set via the CMS.
+    var waDigits = String(s.whatsapp || '').replace(/[^\d]/g, '');
+    var waMsg = "Hi, I'm interested in booking the flat — could you help me with dates and rates?";
+    var waHref = 'https://wa.me/' + waDigits + '?text=' + encodeURIComponent(waMsg);
+    document.querySelectorAll('a[data-bind="whatsapp"], a[data-bind="whatsappLabel"]').forEach(function(a){
+      a.href = waHref;
+    });
+    document.querySelectorAll('a[data-bind="email"]').forEach(function(a){
+      a.href = 'mailto:' + (s.email || '');
+    });
     var waBtn = document.getElementById('waBookBtn');
-    if(waBtn){
-      var digits = String(s.whatsapp || '').replace(/[^\d]/g, '');
-      var msg = "Hi, I'm interested in booking the flat — could you help me with dates and rates?";
-      waBtn.href = 'https://wa.me/' + digits + '?text=' + encodeURIComponent(msg);
-    }
+    if(waBtn) waBtn.href = waHref;
     renderUnits(s.units || []);
   }
 
