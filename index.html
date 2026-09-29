@@ -441,7 +441,35 @@
     margin-top:20px;padding-top:20px;border-top:1px dashed var(--line);
   }
   .cal-summary-text{display:flex;flex-direction:column;gap:4px}
-  .b24-widget-mount{font-family:var(--font-mono)}
+  /* Restyle the Beds24 embedded widget (plain by default) to match the
+     site's cream/orange theme instead of its own blue defaults. Uses tag
+     selectors rather than Beds24's internal class names, since those
+     aren't part of the public widget contract and can change. */
+  .b24-widget-mount{font-family:var(--font-mono);color:var(--ink)}
+  .b24-widget-mount table{width:100%;border-collapse:collapse}
+  .b24-widget-mount td{padding:0 0 14px 0}
+  .b24-widget-mount td[colspan]{padding-bottom:0}
+  .b24-widget-mount b, .b24-widget-mount strong{
+    font-family:var(--font-display);font-weight:700;font-size:1rem;color:var(--ink);
+  }
+  .b24-widget-mount input[type="text"],
+  .b24-widget-mount input[type="number"],
+  .b24-widget-mount select{
+    font-family:var(--font-mono);font-size:0.9rem;color:var(--ink);
+    background:var(--surface);border:1px solid var(--line)!important;border-radius:6px!important;
+    padding:11px 12px!important;width:100%;box-sizing:border-box;
+  }
+  .b24-widget-mount input[type="submit"],
+  .b24-widget-mount input[type="button"],
+  .b24-widget-mount button{
+    font-family:var(--font-mono)!important;font-size:0.85rem!important;letter-spacing:0.02em;
+    background:var(--accent)!important;color:var(--accent-ink)!important;
+    border:none!important;border-radius:3px!important;padding:13px 22px!important;
+    cursor:pointer;transition:transform .15s ease;text-transform:none;
+  }
+  .b24-widget-mount input[type="submit"]:hover,
+  .b24-widget-mount input[type="button"]:hover,
+  .b24-widget-mount button:hover{transform:translateY(-1px)}
   .wa-row{display:flex;justify-content:flex-end;width:100%}
   .cal-dates{font-family:var(--font-mono);font-size:0.85rem;color:var(--ink-soft)}
   .cal-dates b{color:var(--ink);font-weight:600}
