@@ -441,36 +441,11 @@
     margin-top:20px;padding-top:20px;border-top:1px dashed var(--line);
   }
   .cal-summary-text{display:flex;flex-direction:column;gap:4px}
-  /* Restyle the Beds24 embedded widget (plain by default) to match the
-     site's cream/orange theme instead of its own blue defaults. Uses tag
-     selectors rather than Beds24's internal class names, since those
-     aren't part of the public widget contract and can change. */
-  .b24-widget-mount{font-family:var(--font-mono);color:var(--ink)}
-  .b24-widget-mount table{width:100%;border-collapse:collapse}
-  .b24-widget-mount td{padding:0 0 14px 0}
-  .b24-widget-mount td[colspan]{padding-bottom:0}
-  .b24-widget-mount b, .b24-widget-mount strong{
-    font-family:var(--font-display);font-weight:700;font-size:1rem;color:var(--ink);
-  }
-  .b24-widget-mount input[type="text"],
-  .b24-widget-mount input[type="number"],
-  .b24-widget-mount select{
-    font-family:var(--font-mono);font-size:0.9rem;color:var(--ink);
-    background:var(--surface);border:1px solid var(--line)!important;border-radius:6px!important;
-    padding:11px 12px!important;width:100%;box-sizing:border-box;
-  }
-  .b24-widget-mount input[type="submit"],
-  .b24-widget-mount input[type="button"],
-  .b24-widget-mount button{
-    font-family:var(--font-mono)!important;font-size:0.85rem!important;letter-spacing:0.02em;
-    background:var(--accent)!important;color:var(--accent-ink)!important;
-    border:none!important;border-radius:3px!important;padding:13px 22px!important;
-    cursor:pointer;transition:transform .15s ease;text-transform:none;
-  }
-  .b24-widget-mount input[type="submit"]:hover,
-  .b24-widget-mount input[type="button"]:hover,
-  .b24-widget-mount button:hover{transform:translateY(-1px)}
-  .wa-row{display:flex;justify-content:flex-end;width:100%}
+  /* Beds24 hosted booking engine, embedded via iframe (full search →
+     rates → guest details → payment flow, matching Beds24's own page). */
+  .b24-iframe-wrap{width:100%}
+  .b24-iframe-wrap iframe{width:100%;border:none;display:block}
+  .wa-row{display:flex;justify-content:flex-end;width:100%;margin-top:16px}
   .cal-dates{font-family:var(--font-mono);font-size:0.85rem;color:var(--ink-soft)}
   .cal-dates b{color:var(--ink);font-weight:600}
   .cal-clear{all:unset;cursor:pointer;font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);text-decoration:underline}
@@ -528,12 +503,6 @@
   .unit-tab.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 </style>
 <script>document.documentElement.setAttribute('data-theme','light');</script>
-<!-- Beds24 embedded booking widget dependencies (jQuery + jQuery UI), loaded
-     once in <head> as required by bookWidget.min.js -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-<script src="https://media.xmlcal.com/widget/1.01/js/bookWidget.min.js"></script>
 </head>
 <body>
 
@@ -792,7 +761,9 @@
         </div>
         <!-- Beds24 embedded booking widget: dates, live rates, guest details
              and payment all happen inline here, no redirect off-site. -->
-        <div id="bookWidget-178017-356866-0-1790645045" class="b24-widget-mount"></div>
+        <div class="b24-iframe-wrap">
+          <iframe src="https://beds24.com/booking2.php?propid=356866&amp;referer=iframe" height="2000" loading="lazy" title="Book New Guest Favourite 1-Bed Flat — live availability and rates"></iframe>
+        </div>
         <div class="cal-summary" style="border-top:none;padding-top:0">
           <div class="wa-row">
             <a class="wa-btn" id="waBookBtn" href="#" target="_blank" rel="noopener">
@@ -1070,20 +1041,6 @@
   }
 
   renderContent(state);
-
-  // ---------- Beds24 embedded booking widget ----------
-  // Renders the real Beds24 "Booking Box" inline: guests pick dates, see
-  // live rates, and pay without ever leaving premiernest.org.
-  if(window.jQuery){
-    jQuery(function(){
-      jQuery('#bookWidget-178017-356866-0-1790645045').bookWidget({
-        propid: 356866,
-        formAction: 'https://beds24.com/booking.php',
-        widgetLang: 'en',
-        widgetType: 'BookingBox'
-      });
-    });
-  }
 
   // ---------- load live content ----------
   // Content is edited through the CMS at /admin/, which writes to
